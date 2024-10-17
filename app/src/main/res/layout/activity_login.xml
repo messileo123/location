@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="40dp"
     android:background="@drawable/bn"
-    tools:context=".LoginActivity">
+    tools:context=".view.LoginActivity">
 
 
     <TextView

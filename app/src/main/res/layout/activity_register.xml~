@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="30dp"
-    tools:context=".RegisterActivity">
+    android:background="@drawable/bg"
+    tools:context=".view.RegisterActivity">
 
 
     <TextView
@@ -15,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Sing Up"
-        android:textColor="#136285"
+        android:textColor="#253137"
         android:textSize="24sp"
 
         android:textStyle="bold"
@@ -30,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="124dp"
         android:hint="Enter your Name..."
+        android:textColorHint="@color/white"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="@+id/text"
         app:layout_constraintHorizontal_bias="1.0"
@@ -47,6 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter your email..."
+        android:textColorHint="@color/white"
         android:layout_marginTop="20dp"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayout0"
@@ -65,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="Enter your password..."
+        android:textColorHint="@color/white"
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
         app:layout_constraintHorizontal_bias="1.0"
@@ -83,6 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="Confirm your password..."
+        android:textColorHint="#FBFBFB"
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayout1"
         app:layout_constraintHorizontal_bias="1.0"
@@ -102,7 +107,7 @@
         android:layout_marginTop="100dp"
         android:backgroundTint="#00FFFFFF"
         android:text="Sing Up"
-        android:textColor="#000000"
+        android:textColor="#DECFCF"
         app:cornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayout1"
         app:layout_constraintHorizontal_bias="0.0"
@@ -117,6 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:textAlignment="center"
+        android:textColor="@color/white"
         android:text="I have aready an account! Login?"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/registerBtn"
