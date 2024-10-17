@@ -45,7 +45,7 @@ class RegisterActivity : AppCompatActivity() {
             }else{
             authenticationViewModel.register(email , password , {
 
-                firestoreView
+
                 startActivity(Intent(this , MainActivity::class.java))
 
                 finish()
