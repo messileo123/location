@@ -1,0 +1,128 @@
+package com.example.location.view.viewmodel
+
+import android.content.pm.PackageManager
+import android.location.Location
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
+import com.example.location.R
+
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.example.location.databinding.ActivityMapsBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import java.util.jar.Manifest
+
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+    private lateinit var mMap: GoogleMap
+    private lateinit var binding: ActivityMapsBinding
+    private lateinit var firestoreViewModel: FirestoreViewModel
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMapsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        firestoreViewModel = ViewModelProvider(this).get(FirestoreViewModel::class.java)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+        binding.btnZoomIn.setOnClickListener {
+            mMap.animateCamera(CameraUpdateFactory.zoomIn())
+        }
+        binding.btnZoomOut.setOnClickListener {
+            mMap.animateCamera(CameraUpdateFactory.zoomOut())
+        }
+    }
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+            return
+        }
+
+        mMap.isMyLocationEnabled = true
+
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            if (location != null) {
+                val currentLatLng = LatLng(location.latitude, location.longitude)
+                mMap.addMarker(MarkerOptions().position(currentLatLng).title("You are here"))
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+            } else {
+                Log.w("MapsActivity", "Current location is null")
+            }
+        }
+        firestoreViewModel.getAllUsers(this) { users ->
+            for (user in users) {
+                val userLocation = user.location
+                Log.d("MapsActivity", "User: ${user.displayName}, Location: $userLocation")
+                if (isValidLocation(userLocation)) {
+                    val latLng = parseLocation(userLocation)
+                    addMarker(latLng, user.displayName)
+                } else {
+                    Log.w("MapsActivity", "Invalid location for ${user.displayName}, using default")
+                    val defaultLatLng = LatLng(37.4220936, -122.083922) // Google HQ as default
+                    addMarker(defaultLatLng, "${user.displayName} (default location)")
+                }
+            }
+        }
+    }
+    // Helper function to add marker
+    private fun addMarker(latLng: LatLng, title: String) {
+        val markerOptions = MarkerOptions().position(latLng).title(title)
+        mMap.addMarker(markerOptions)
+    }
+
+    private fun isValidLocation(location: String?): Boolean {
+        return location?.contains("Lat:") == true && location.contains("Long:")
+    }
+
+    private fun parseLocation(location: String): LatLng {
+        val latLngSplit = location.split(", ")
+        val latitude = latLngSplit[0].substringAfter("Lat: ").toDouble()
+        val longitude = latLngSplit[1].substringAfter("Long: ").toDouble()
+        return LatLng(latitude, longitude)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+
+                onMapReady(mMap)
+            } else {
+                Log.e("MapsActivity", "Location permission denied")
+            }
+        }
+    }
+}

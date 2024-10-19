@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/freindsFragment">
+    app:startDestination="@id/friendsFragment">
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.example.location.view.FriendsFragment"
+        android:label="fragment_friends"
+        tools:layout="@layout/fragment_friends">
+        <action
+            android:id="@+id/action_friendsFragment_to_profileFragment2"
+            app:destination="@id/profileFragment2" />
+    </fragment>
 
     <fragment
-        android:id="@+id/freindsFragment"
-        android:name="com.example.location.FreindsFragment"
-        android:label="fragment_freinds"
-        tools:layout="@layout/fragment_freinds" >
-        <action
-            android:id="@+id/action_freindsFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/profileFragment"
+        android:id="@+id/profileFragment2"
         android:name="com.example.location.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />

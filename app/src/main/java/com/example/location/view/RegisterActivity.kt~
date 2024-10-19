@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.location.databinding.ActivityRegisterBinding
 import com.example.location.view.viewmodel.AuthenticationViewModel
+import com.example.location.viewmodel.AuthenticationViewModel
 import com.example.location.viewmodel.FirestoreViewModel
 import com.google.firebase.auth.FirebaseAuth
 
